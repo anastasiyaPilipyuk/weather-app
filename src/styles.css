@@ -1,0 +1,50 @@
+body {
+  font-family: "Poppins", sans-serif;
+  font-family: "Ysabeau SC", sans-serif;
+}
+
+.main-weather-pic {
+  width: 120px;
+  height: 120px;
+}
+
+h1 {
+  padding: 20px 0 10px 0px;
+}
+
+.city-icon {
+  width: 20px;
+  padding: 0 0 10px 0;
+}
+.city-name {
+  padding: 0;
+}
+
+.add-weather-pic {
+  height: 30px;
+}
+
+.main-temp {
+  font-weight: 500;
+  font-size: 28px;
+}
+
+.add-label {
+  font-size: 18px;
+}
+
+.add-info-row {
+  border: 1px solid white;
+}
+.add-info-row:hover {
+  border: 1px solid #86d6e3;
+}
+
+.quick-link {
+  font-size: 14px;
+}
+
+.measure {
+  font-style: inherit;
+  font-size: 18px;
+}
