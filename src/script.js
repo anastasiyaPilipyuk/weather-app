@@ -30,6 +30,9 @@ function printCityWeather(cityWeather)
   setElementValue("#curr-wind", cityWeather.wind);
   setElementValue("#curr-descr", cityWeather.description);
   setElementValue("#curr-datetime", getFormattedDateTime(cityWeather.timestamp * 1000));
+  let weaterImage = document.querySelector("#weather-icon");
+  weaterImage.setAttribute("src",     `http://openweathermap.org/img/wn/${cityWeather.icon}@2x.png`);
+  weaterImage.setAttribute("alt", cityWeather.description);
 }
 
 function getWeatherInfo(response) {
@@ -41,7 +44,8 @@ function getWeatherInfo(response) {
       humidity: response.data.main.humidity,
       wind: response.data.wind.speed,
       description: response.data.weather[0].description,
-      timestamp: response.data.dt
+      timestamp: response.data.dt, 
+      icon: response.data.weather[0].icon
     });
   }
 }
