@@ -140,7 +140,8 @@ function getweatherByNavigator() {
 }
 
 //Map weather info
-document.querySelector("#weather-info-form").addEventListener("submit", updateWeatherInfo);
+let weatherForm = document.querySelector("#weather-info-form");
+weatherForm.addEventListener("submit", updateWeatherInfo);
 
 let cityName = document.querySelector("#city-label");
 getWeather(cityName.innerHTML);
@@ -154,3 +155,12 @@ farenhLink.addEventListener("click", changeTempToOtherMeasure);
 //Set current measure for celsium
 let isCelsium = true;
 setElementsVisibility();
+
+let elements = document.querySelectorAll('.city-list');
+
+let clickEvent = (e) => {
+  getWeather(e.target.innerText);
+}
+Array.prototype.forEach.call(elements, (item) => {
+  item.addEventListener('click', clickEvent);
+});
