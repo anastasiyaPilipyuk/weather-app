@@ -14,34 +14,6 @@ function convertToFarinheit(value)
   return value * 1.8 + 32;
 }
 
-function capitalizeWord(value)
-{
-  let firstLetter = value.charAt(0).toUpperCase();
-  return firstLetter + value.slice(1);
-}
-
-function capitalizeComplex(value)
-{
-  let arr = value.split(" ");
-  for (var i = 0; i < arr.length; i++) 
-  {
-    arr[i] = capitalizeWord(arr[i]);
-  }
-  return arr.join(" ");
-}
-
-function capitalize(value)
-{
-  if (value.includes(" "))
-  {
-    return capitalizeComplex(value);   
-  }
-  else
-  {
-    return capitalizeWord(value);
-  }
-}
-
 function setElementValue(id, value) {
   let element = document.querySelector(id);
   if (element) {
@@ -51,17 +23,16 @@ function setElementValue(id, value) {
 
 function printCityWeather(cityWeather)
 {
-  setElementValue("#city-label", capitalize(cityWeather.name));
+  setElementValue("#city-label", cityWeather.name);
   setElementValue("#curr-temp-C", getTemperature(cityWeather.temp));
   setElementValue("#curr-temp-F", getTemperature(convertToFarinheit(cityWeather.temp)));
   setElementValue("#curr-humidity", cityWeather.humidity);
   setElementValue("#curr-wind", cityWeather.wind);
   setElementValue("#curr-descr", cityWeather.description);
+  setElementValue("#curr-datetime", getFormattedDateTime(cityWeather.timestamp * 1000));
 }
 
 function getWeatherInfo(response) {
-  //Set current date and time
-  updateDateTime();
 
   if (response.status === 200) {
     printCityWeather({
@@ -69,7 +40,8 @@ function getWeatherInfo(response) {
       temp: response.data.main.temp,
       humidity: response.data.main.humidity,
       wind: response.data.wind.speed,
-      description: response.data.weather[0].main
+      description: response.data.weather[0].description,
+      timestamp: response.data.dt
     });
   }
 }
@@ -95,23 +67,17 @@ function getCorrectMonth(month) {
   return monthStr;
 }
 
-function getTwoDigitMinutes(minutes) {
-  let minStr = minutes.toString();
-  if (minStr.length === 1) {
-    minStr = "0" + minutes;
+function getTwoDigitValue(value) {
+  if (value < 10) {
+     return `0${value}`;
   }
-  return minStr;
+  return value;
 }
 
-function getFormattedDateTime() {
-  let currDate = new Date();
-  return `${getDayOfWeek(currDate.getDay())}. ${currDate.getDate()}.${getCorrectMonth(currDate.getMonth())}.${currDate.getFullYear()} ${currDate.getHours()}:${getTwoDigitMinutes(currDate.getMinutes())}`;
+function getFormattedDateTime(timestamp) {
+  let currDate = new Date(timestamp);
+  return `${getDayOfWeek(currDate.getDay())}. ${currDate.getDate()}.${getCorrectMonth(currDate.getMonth())}.${currDate.getFullYear()} ${getTwoDigitValue(currDate.getHours())}:${getTwoDigitValue(currDate.getMinutes())}`;
 
-}
-
-function updateDateTime(){
-  let datetimeElement = document.querySelector("#curr-datetime");
-  datetimeElement.innerHTML = getFormattedDateTime();
 }
 
 function updateWeatherInfo(event){
@@ -182,9 +148,6 @@ getWeather(cityName.innerHTML);
 //Add event listener to link for changing measure
 document.querySelector("#alt-measureC-link").addEventListener("click", changeTempToOtherMeasure);
 document.querySelector("#alt-measureF-link").addEventListener("click", changeTempToOtherMeasure);
-
-//current locationc
-document.querySelector("#btn-curr-location").addEventListener("click", getweatherByNavigator);
 
 //Set current measure for celsium
 let isCelsium = true;

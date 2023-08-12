@@ -54,3 +54,7 @@ h1 {
   font-size: 12px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+#city-label:first-letter {
+  text-transform: capitalize;
+}
