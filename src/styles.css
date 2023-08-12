@@ -58,3 +58,9 @@ h1 {
 #city-label:first-letter {
   text-transform: capitalize;
 }
+
+.measure .active {
+  color: black;
+  cursor: default;
+  text-decoration: none;
+}

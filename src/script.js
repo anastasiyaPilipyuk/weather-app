@@ -104,18 +104,14 @@ function setElementsVisibility() {
   if (isCelsium == true) {
     setElementVisibility("#curr-temp-C", "inline");
     setElementVisibility("#curr-temp-F", "none");
-    setElementVisibility("#alt-measureC-link", "none");
-    setElementVisibility("#alt-measureC-label", "inline");
-    setElementVisibility("#alt-measureF-link", "inline");
-    setElementVisibility("#alt-measureF-label", "none");
+    celsiumLink.classList.add("active");
+    farenhLink.classList.remove("active");
   }
   else {
     setElementVisibility("#curr-temp-C", "none");
     setElementVisibility("#curr-temp-F", "inline");
-    setElementVisibility("#alt-measureC-link", "inline");
-    setElementVisibility("#alt-measureC-label", "none");
-    setElementVisibility("#alt-measureF-link", "none");
-    setElementVisibility("#alt-measureF-label", "inline");
+    farenhLink.classList.add("active");
+    celsiumLink.classList.remove("active");
   }
 }
 
@@ -150,8 +146,10 @@ let cityName = document.querySelector("#city-label");
 getWeather(cityName.innerHTML);
 
 //Add event listener to link for changing measure
-document.querySelector("#alt-measureC-link").addEventListener("click", changeTempToOtherMeasure);
-document.querySelector("#alt-measureF-link").addEventListener("click", changeTempToOtherMeasure);
+let celsiumLink = document.querySelector("#alt-measureC-link");
+let farenhLink = document.querySelector("#alt-measureF-link");
+celsiumLink.addEventListener("click", changeTempToOtherMeasure);
+farenhLink.addEventListener("click", changeTempToOtherMeasure);
 
 //Set current measure for celsium
 let isCelsium = true;
