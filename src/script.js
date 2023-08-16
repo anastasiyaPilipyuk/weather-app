@@ -21,6 +21,34 @@ function setElementValue(id, value) {
   }
 }
 
+function printForecast()
+{
+  let forecastHTML = '';
+  let days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+  days.forEach(element => {
+    forecastHTML += `                
+    <div class="row add-info-row">
+      <div class="col-3 justify-content-start p-1">
+        <span class="add-label">${element}</span>
+      </div>
+      <div class="col-3 p-0 justify-content-start p-lg-1">
+        <img
+          src="images/sun_and_cloud.png"
+          alt="Cloudy weather"
+          class="add-weather-pic"
+        />
+      </div>
+      <div class="col-6 justify-content-start p-1">
+        <label class="add-temp">20°C / 13°C</label>
+      </div>
+    </div>`;
+  });
+
+  setElementValue("#forecast", forecastHTML);
+
+}
+
 function printCityWeather(cityWeather)
 {
   setElementValue("#city-label", cityWeather.name);
@@ -33,6 +61,7 @@ function printCityWeather(cityWeather)
   let weaterImage = document.querySelector("#weather-icon");
   weaterImage.setAttribute("src",     `http://openweathermap.org/img/wn/${cityWeather.icon}@2x.png`);
   weaterImage.setAttribute("alt", cityWeather.description);
+  printForecast();
 }
 
 function getWeatherInfo(response) {
