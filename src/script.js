@@ -1,7 +1,7 @@
-  
-let apiKey = "9a99caca0eb10bc60aeb3d1a70fd478d";
+
+let apiKey = "a254804501843d5o84b16tf864cb33f6";
 let units = "metric";
-let baseWeatherURL = `https://api.openweathermap.org/data/2.5/weather?appid=${apiKey}&units=${units}&q=`;
+let baseWeatherURL=`https://api.shecodes.io/weather/v1/current?key=${apiKey}&units=${units}&query=`;
 
 // write your code here
 function getTemperature(value)
@@ -21,29 +21,33 @@ function setElementValue(id, value) {
   }
 }
 
-function printForecast()
+function printForecast(response)
 {
   let forecastHTML = '';
-  let days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  let days = response.data.daily;
 
-  days.forEach(element => {
+  let i = 1;
+
+  while (i < 6) {
+    let element = days[i];
     forecastHTML += `                
     <div class="row add-info-row">
       <div class="col-3 justify-content-start p-1">
-        <span class="add-label">${element}</span>
+        <span class="add-label">${getDayOfWeek((new Date(element.time * 1000)).getDay())}</span>
       </div>
       <div class="col-3 p-0 justify-content-start p-lg-1">
         <img
-          src="images/sun_and_cloud.png"
-          alt="Cloudy weather"
+          src="${element.condition.icon_url}"
+          alt=${element.condition.description}"
           class="add-weather-pic"
         />
       </div>
       <div class="col-6 justify-content-start p-1">
-        <label class="add-temp">20°C / 13°C</label>
+        <label class="add-temp">${getTemperature(element.temperature.minimum)} °C / ${getTemperature(element.temperature.maximum)} °C</label>
       </div>
     </div>`;
-  });
+    i++;
+  }
 
   setElementValue("#forecast", forecastHTML);
 
@@ -59,24 +63,29 @@ function printCityWeather(cityWeather)
   setElementValue("#curr-descr", cityWeather.description);
   setElementValue("#curr-datetime", getFormattedDateTime(cityWeather.timestamp * 1000));
   let weaterImage = document.querySelector("#weather-icon");
-  weaterImage.setAttribute("src",     `http://openweathermap.org/img/wn/${cityWeather.icon}@2x.png`);
+
+  weaterImage.setAttribute("src",`http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${cityWeather.icon}.png`);
   weaterImage.setAttribute("alt", cityWeather.description);
-  printForecast();
+  
+  let url = `https://api.shecodes.io/weather/v1/forecast?query=${cityWeather.name}&units=${units}&key=${apiKey}`;
+  axios.get(url).then(printForecast);
+
 }
 
 function getWeatherInfo(response) {
-
   if (response.status === 200) {
     printCityWeather({
-      name: response.data.name,
-      temp: response.data.main.temp,
-      humidity: response.data.main.humidity,
+      name: response.data.city,
+      temp: response.data.temperature.current,
+      humidity: response.data.temperature.humidity,
       wind: response.data.wind.speed,
-      description: response.data.weather[0].description,
-      timestamp: response.data.dt, 
-      icon: response.data.weather[0].icon
+      description: response.data.condition.description,
+      timestamp: response.data.time, 
+      icon: response.data.condition.icon,
+      coord: response.data.coordinates
     });
   }
+
 }
 
 function getWeather(city)
