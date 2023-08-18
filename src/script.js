@@ -1,17 +1,10 @@
-
 let apiKey = "a254804501843d5o84b16tf864cb33f6";
 let units = "metric";
 let baseWeatherURL=`https://api.shecodes.io/weather/v1/current?key=${apiKey}&units=${units}&query=`;
 
-// write your code here
 function getTemperature(value)
 {
   return Math.floor(value);
-}
-
-function convertToFarinheit(value)
-{
-  return value * 1.8 + 32;
 }
 
 function setElementValue(id, value) {
@@ -23,34 +16,35 @@ function setElementValue(id, value) {
 
 function printForecast(response)
 {
-  let forecastHTML = '';
-  let days = response.data.daily;
+  if (response.status === 200) {
+    let forecastHTML = '';
+    let days = response.data.daily;
 
-  let i = 1;
+    let i = 1;
 
-  while (i < 6) {
-    let element = days[i];
-    forecastHTML += `                
-    <div class="row add-info-row">
-      <div class="col-3 justify-content-start p-1">
-        <span class="add-label">${getDayOfWeek((new Date(element.time * 1000)).getDay())}</span>
-      </div>
-      <div class="col-3 p-0 justify-content-start p-lg-1">
-        <img
-          src="${element.condition.icon_url}"
-          alt=${element.condition.description}"
-          class="add-weather-pic"
-        />
-      </div>
-      <div class="col-6 justify-content-start p-1">
-        <label class="add-temp">${getTemperature(element.temperature.minimum)} °C / ${getTemperature(element.temperature.maximum)} °C</label>
-      </div>
-    </div>`;
-    i++;
+    while (i < 6) {
+      let element = days[i];
+      forecastHTML += `                
+      <div class="row add-info-row">
+        <div class="col-3 justify-content-start p-1">
+          <span class="add-label">${getDayOfWeek((new Date(element.time * 1000)).getDay())}</span>
+        </div>
+        <div class="col-3 p-0 justify-content-start p-lg-1">
+          <img
+            src="${element.condition.icon_url}"
+            alt=${element.condition.description}"
+            class="add-weather-pic"
+          />
+        </div>
+        <div class="col-6 justify-content-start p-1">
+          <label class="add-temp">${getTemperature(element.temperature.maximum)} °C / ${getTemperature(element.temperature.minimum)} °C</label>
+        </div>
+      </div>`;
+      i++;
+    }
+
+    setElementValue("#forecast", forecastHTML);
   }
-
-  setElementValue("#forecast", forecastHTML);
-
 }
 
 function printCityWeather(cityWeather)
@@ -61,9 +55,9 @@ function printCityWeather(cityWeather)
   setElementValue("#curr-wind", cityWeather.wind);
   setElementValue("#curr-descr", cityWeather.description);
   setElementValue("#curr-datetime", getFormattedDateTime(cityWeather.timestamp * 1000));
+  
   let weaterImage = document.querySelector("#weather-icon");
-
-  weaterImage.setAttribute("src",`http://shecodes-assets.s3.amazonaws.com/api/weather/icons/${cityWeather.icon}.png`);
+  weaterImage.setAttribute("src", cityWeather.icon);
   weaterImage.setAttribute("alt", cityWeather.description);
   
   let url = `https://api.shecodes.io/weather/v1/forecast?query=${cityWeather.name}&units=${units}&key=${apiKey}`;
@@ -80,11 +74,9 @@ function getWeatherInfo(response) {
       wind: response.data.wind.speed,
       description: response.data.condition.description,
       timestamp: response.data.time, 
-      icon: response.data.condition.icon,
-      coord: response.data.coordinates
+      icon: response.data.condition.icon_url
     });
   }
-
 }
 
 function getWeather(city)
@@ -96,7 +88,7 @@ function getWeather(city)
 }
 
 function getDayOfWeek(day) {
-  let days = ["Sun", "Mon", "Tue", "Wed", "Thue", "Fri", "Sat"];
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return days[day];
 }
 
@@ -137,7 +129,7 @@ function getCurrentPosition(position) {
   lat = lat.toFixed(2);
   lon = lon.toFixed(2);
 
-  let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+  let url = `https://api.shecodes.io/weather/v1/current?lon=${lon}&lat=${lat}&key=${apiKey}&units=${units}`;
   axios.get(url).then(getWeatherInfo);
 }
 
@@ -160,3 +152,5 @@ let clickEvent = (e) => {
 Array.prototype.forEach.call(elements, (item) => {
   item.addEventListener('click', clickEvent);
 });
+
+document.querySelector('#curr-location').addEventListener('click', getweatherByNavigator)

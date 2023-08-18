@@ -64,3 +64,7 @@ h1 {
   cursor: default;
   text-decoration: none;
 }
+
+.city-list-style, .city-list {
+  text-decoration: none;
+}
