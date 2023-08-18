@@ -57,7 +57,6 @@ function printCityWeather(cityWeather)
 {
   setElementValue("#city-label", cityWeather.name);
   setElementValue("#curr-temp-C", getTemperature(cityWeather.temp));
-  setElementValue("#curr-temp-F", getTemperature(convertToFarinheit(cityWeather.temp)));
   setElementValue("#curr-humidity", cityWeather.humidity);
   setElementValue("#curr-wind", cityWeather.wind);
   setElementValue("#curr-descr", cityWeather.description);
@@ -131,37 +130,6 @@ function updateWeatherInfo(event){
 
 }
 
-function setElementVisibility(id, value) {
-  let element = document.querySelector(id);
-  if (element) {
-    element.style.display = value;
-  }
-}
-
-function setElementsVisibility() {
-  if (isCelsium == true) {
-    setElementVisibility("#curr-temp-C", "inline");
-    setElementVisibility("#curr-temp-F", "none");
-    celsiumLink.classList.add("active");
-    farenhLink.classList.remove("active");
-  }
-  else {
-    setElementVisibility("#curr-temp-C", "none");
-    setElementVisibility("#curr-temp-F", "inline");
-    farenhLink.classList.add("active");
-    celsiumLink.classList.remove("active");
-  }
-}
-
-function changeTempToOtherMeasure(event) {
-  if (event.target.innerHTML === "C") {
-    isCelsium = true;
-  } else {
-    isCelsium = false;
-  }
-  setElementsVisibility();
-}
-
 function getCurrentPosition(position) {
   let lat = position.coords.latitude;
   let lon = position.coords.longitude;
@@ -183,16 +151,6 @@ weatherForm.addEventListener("submit", updateWeatherInfo);
 
 let cityName = document.querySelector("#city-label");
 getWeather(cityName.innerHTML);
-
-//Add event listener to link for changing measure
-let celsiumLink = document.querySelector("#alt-measureC-link");
-let farenhLink = document.querySelector("#alt-measureF-link");
-celsiumLink.addEventListener("click", changeTempToOtherMeasure);
-farenhLink.addEventListener("click", changeTempToOtherMeasure);
-
-//Set current measure for celsium
-let isCelsium = true;
-setElementsVisibility();
 
 let elements = document.querySelectorAll('.city-list');
 
